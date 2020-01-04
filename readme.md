@@ -8,6 +8,8 @@ TODO
 - ~~**Manage Button States**~~
 - ~~**Add Wifi credentials**~~
 - Add Api credentials
+  - Create web server
+  - Create input forms
 - Toggl Socket research
 - Add Toggl's Socket as state management
 - Starting / Stoping time entries
