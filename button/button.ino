@@ -1,3 +1,5 @@
+#include <WiFiManager.h>
+
 const int led_pin = 16;
 const int button_pin = 14;
 
@@ -5,9 +7,14 @@ int previous_pressed = 0;
 int pressed = 0;
 int led_state = 0;
 
+// PROGMEM for API key & config save
+
 void setup() {
+  Serial.begin(115200);
   pinMode(led_pin, OUTPUT);
   pinMode(button_pin, INPUT);
+  digitalWrite(led_pin, HIGH);
+  setup_wifi();
 }
 
 void loop() {
@@ -28,4 +35,11 @@ void switch_led(){
     digitalWrite(led_pin, HIGH);
     led_state = 0;
     }
-  }
+}
+
+void setup_wifi(){
+  WiFiManager wifiManager;
+  wifiManager.resetSettings();
+  wifiManager.autoConnect("Setup your Toggl Button");
+  Serial.print("wifi connected");
+}
