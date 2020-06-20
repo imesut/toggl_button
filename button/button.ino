@@ -37,14 +37,17 @@ WebsocketsClient client;
 ////
 void setup() {
   Serial.begin(115200);
-  // Serial.setDebugOutput(true); // Open if a problem occurring.
+  // Serial.setDebugOutput(true); // Open for debug.
   pinMode(led_pin, OUTPUT);
   pinMode(button_pin, INPUT);
-  digitalWrite(led_pin, LOW);
+  digitalWrite(led_pin, HIGH);
   setup_wifi();
-  Serial.println("wifi init succeed.");
-  init_socket();
+  Serial.println("wifi init succeessful.");
   send_timer_request("get_current_entry");
+  init_socket();
+  client.close();
+  delay(500);
+  test_request();
 }
 
 
@@ -150,6 +153,17 @@ void send_timer_request(String action) {
   }
 }
 
+String get_current_entry_id_from_Toggl() {
+  String entry_id = send_toggl_request("/time_entries/current", "GET", "");
+  Serial.print(entry_id);
+  int startchar = entry_id.indexOf("\"id\": ");
+  if (startchar >= 0) {
+    int endchar = entry_id.indexOf(",", startchar);
+    return entry_id.substring(startchar, endchar);
+  }
+  return "";
+}
+
 String send_toggl_request(String path, String req_method, String body) {
   Serial.println("Calling " + path + " as " + req_method + " request with body: " + body);
   BearSSL::WiFiClientSecure secure_client;
@@ -160,7 +174,6 @@ String send_toggl_request(String path, String req_method, String body) {
   HTTPClient req;
 
   req.begin(secure_client, "https://www.toggl.com/api/v8" + path);
-
   req.addHeader("Accept", "*/*");
   req.addHeader("Content-Type", "application/json");
   req.addHeader("Authorization", auth_key);
@@ -171,36 +184,12 @@ String send_toggl_request(String path, String req_method, String body) {
   String payload = req.getString();
   req.end();
   secure_client.stop();
-  Serial.print("Response status code: ");
+  Serial.print("http Response status code: ");
   Serial.print(status_code);
-  Serial.print(" - body: ");
+  Serial.println("http body: ");
   Serial.print(payload);
   running_entry_id = "";
   return payload;
-}
-
-String get_current_entry_id_from_Toggl() {
-  String entry_id = send_toggl_request("/time_entries/current", "GET", "");
-  int startchar = entry_id.indexOf("\"id\": ");
-  if (startchar >= 0) {
-    int endchar = entry_id.indexOf(",", startchar);
-    return entry_id.substring(startchar, endchar);
-  }
-  return "";
-}
-
-
-// TODO REMOVE LED TOGGLE CODE BASE
-
-void switch_led() {
-  if (led_state == 0) {
-    digitalWrite(led_pin, HIGH);
-    led_state = 1;
-  }
-  else if (led_state == 1) {
-    digitalWrite(led_pin, LOW);
-    led_state = 0;
-  }
 }
 
 //Gray Area
