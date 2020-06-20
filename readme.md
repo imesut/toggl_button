@@ -1,4 +1,8 @@
-# What is Toggl Button?
+<img style="float: left; margin-right: 20px" src="images/toggl_icon_50px.png">
+
+# What is Toggl Button? 
+
+<img style="float: right; margin-left: 20px" src="images/button_med.jpg">
 
 Toggl Button, is a ESP866 based physical button project to start and stop [Toggl](https://toggl.com) time entries.
 
@@ -11,6 +15,7 @@ This project is prepared by Toggl's [official rest APIs](https://github.com/togg
 
 1. Getting Token
 2. Updating Token
+
 
 # How To Guide
 
